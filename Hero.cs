@@ -1,18 +1,41 @@
 public class Hero
 {
     public string Name;
-    public int Heal;
-    public int Lvl;
-    public int Exp;
+    public int Health { get; private set; }
+    public int MaxHealth { get; private set; }
+    public int Level;
+    public int Experience;
 
-    public Hero(string name, int heal)
+    public Hero(string name, int health)
     {
-
-        
         Name = name;
-        Heal = heal;
-        Lvl = 1;
-        Exp = 0;
+
+        MaxHealth = health;
+
+        if (MaxHealth <= 0)
+        {
+            MaxHealth = 100;
+        }
+
+        if (MaxHealth > 200)
+        {
+            MaxHealth = 200;
+        }
+
+        Health = health;
+
+        if (Health < 0)
+        {
+            Health = 0;
+        }
+
+        if (Health > MaxHealth)
+        {
+            Health = MaxHealth;
+        }
+
+        Level = 1;
+        Experience = 0;
     }
 
     public void TakeDamage(int damage)
@@ -22,40 +45,52 @@ public class Hero
             return;
         }
 
-        Heal -= damage;
+        Health -= damage;
 
-        if (Heal < 0)
+        if (Health < 0)
         {
-            Heal = 0;
+            Health = 0;
         }
-
     }
-    public void Heall(int amount)
+
+    public void Heal(int amount)
     {
         if (amount <= 0)
         {
             return;
         }
-        Heal += amount;
+
+        int missingHealth = MaxHealth - Health;
+
+        if (amount >= missingHealth)
+        {
+            Health = MaxHealth;
+            return;
+        }
+
+        Health += amount;
     }
-    public void GainExp(int amount)
+
+    public void GainExperience(int amount)
     {
         if (amount <= 0)
         {
             return;
         }
-        Exp += amount;
+
+        Experience += amount;
     }
-    public bool IsAlive() {
-         return Heal > 0;
+
+    public bool IsAlive()
+    {
+        return Health > 0;
     }
-    public string GetInfo() {
-    return $">>> {Name} <<<\n" +
-           $"Здоровье: {Heal}\n" +
-           $"Уровень: {Lvl}\n" +
-           $"Опыт: {Exp}";
-}
 
-
-
+    public string GetInfo()
+    {
+        return $">>> {Name} <<<\n" +
+               $"Здоровье: {Health}\n" +
+               $"Уровень: {Level}\n" +
+               $"Опыт: {Experience}";
+    }
 }
